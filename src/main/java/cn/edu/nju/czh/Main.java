@@ -1,5 +1,6 @@
 package cn.edu.nju.czh;
 
+import cn.edu.nju.czh.apriori.Apriori;
 import cn.edu.nju.czh.preprocessing.*;
 
 import java.util.ArrayList;
@@ -15,8 +16,9 @@ public class Main {
         usageLoader.loadUsages("dataset/UNIX_usage");
         ArrayList<Transaction> transactions1 = groceriesLoader.getTransactions();
         ArrayList<Transaction> transactions2 = usageLoader.getTransactions();
-        for(Transaction transaction:transactions1) {
-            System.out.println(transaction);
-        }
+        Apriori apriori = new Apriori();
+        apriori.setTransactions(transactions1);
+        apriori.setMinSup(5);
+        apriori.excute();
     }
 }

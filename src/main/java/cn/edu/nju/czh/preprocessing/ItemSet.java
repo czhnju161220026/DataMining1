@@ -71,6 +71,11 @@ public class ItemSet {
         return newSet;
     }
 
+    @Override
+    public String toString() {
+        return items.toString();
+    }
+
     public static void main(String[] args) {
         HashSet<String> h = new HashSet<>();
         h.add("123");

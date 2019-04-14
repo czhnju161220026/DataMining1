@@ -1,6 +1,6 @@
 package cn.edu.nju.czh.preprocessing;
 
-public class Record {
+public class Mode {
     private ItemSet itemSet;
     private int num = 0;
 
@@ -22,5 +22,10 @@ public class Record {
 
     public void increase() {
         this.num ++ ;
+    }
+
+    @Override
+    public String toString() {
+        return "Support:"+num+" "+itemSet.toString();
     }
 }
