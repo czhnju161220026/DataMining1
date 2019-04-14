@@ -35,4 +35,23 @@ public class Transaction {
     public int getTid() {
         return tid;
     }
+
+    public boolean containsItemSet(ItemSet set) {
+        ArrayList<String> items1 = set.getItems();
+        boolean flag = true;
+        for (String item : items1) {
+            boolean exist = false;
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).equals(item)) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
 }
