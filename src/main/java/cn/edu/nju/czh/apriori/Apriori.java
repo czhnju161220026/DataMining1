@@ -17,13 +17,12 @@ public class Apriori {
     private String logPath;
     //频繁模式
     private ArrayList<Pattern> frequentPatterns = new ArrayList<>();
-    ArrayList<Pattern> nextFrequentPatterns = new ArrayList<>();
+    private ArrayList<Pattern> nextFrequentPatterns = new ArrayList<>();
+    private ArrayList<ArrayList<Pattern>> allFrequentPatterns = new ArrayList<>();
     private int minSup = 2;
 
     public void setTransactions(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
-        frequentPatterns = new ArrayList<>();
-        nextFrequentPatterns = new ArrayList<>();
     }
 
     public void setMinSup(int minSup) {
@@ -32,6 +31,10 @@ public class Apriori {
 
     public void setLogPath(String logPath) {
         this.logPath = logPath;
+    }
+
+    public ArrayList<ArrayList<Pattern>> getAllFrequentPatterns() {
+        return allFrequentPatterns;
     }
 
     private boolean testItemSet(ItemSet set) {
@@ -110,9 +113,17 @@ public class Apriori {
         }
     }
 
-    private void outputFrequentModes(String path) {
+    private void outputFrequentModes(String path, int count) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path)));
+            BufferedWriter writer;
+            if(count == 1) {
+                writer = new BufferedWriter(new FileWriter(new File(path)));
+            }
+            else {
+                writer = new BufferedWriter(new FileWriter(new File(path), true));
+            }
+            writer.write("-------------------------频繁"+count+"项集----------------------------");
+            writer.newLine();
             for(Pattern pattern : frequentPatterns) {
                 writer.write(""+ pattern);
                 writer.newLine();
@@ -155,31 +166,36 @@ public class Apriori {
 
     //进行挖掘
     public void excute() {
+        frequentPatterns.clear();
+        nextFrequentPatterns.clear();
+        allFrequentPatterns.clear();
         System.out.println("Apriori start:" + new Date());
         long start = System.currentTimeMillis();
         init();
         int count = 1;
-        outputFrequentModes(logPath+"/frequent"+count+".txt");
+        outputFrequentModes(logPath+"/frequent_patterns.txt", count);
 
         while (true) {
             linkAndCut();
             count ++;
             //没有生成更多项的频繁集了
             if(nextFrequentPatterns.size()==0) {
+                allFrequentPatterns.add(frequentPatterns);
                 break;
             }
             else {
                 //System.out.println(nextFrequentPatterns);
                 //System.out.println("Find "+count+"frequent modes");
+                allFrequentPatterns.add(frequentPatterns);
                 frequentPatterns = nextFrequentPatterns;
                 nextFrequentPatterns = new ArrayList<>();
-                outputFrequentModes(logPath+"/frequent"+count+".txt");
+                outputFrequentModes(logPath+"/frequent_patterns.txt", count);
             }
         }
         long end = System.currentTimeMillis();
         System.out.println("Apriori end: "+new Date());
         System.out.println("Time cost: "+(end - start)+" ms.");
-        System.out.println("Result at "+logPath);
+        System.out.println("Frequent Patterns at "+logPath+"/frequent_patterns.txt");
     }
 
 

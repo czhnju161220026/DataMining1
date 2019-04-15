@@ -38,6 +38,14 @@ public class ItemSet {
         return flag;
     }
 
+    public boolean equals(ItemSet set) {
+        return (set.getItems().size() == items.size()) && this.contains(set);
+    }
+
+    public int getSize() {
+        return items.size();
+    }
+
     public boolean linkable(ItemSet set) {
         int n = items.size();
         //正好有n-1个相同的
@@ -53,6 +61,24 @@ public class ItemSet {
         return (count == n - 1);
     }
 
+    //求补集
+    public ItemSet getComplement(ItemSet set) {
+        ItemSet result = new ItemSet();
+        ArrayList<String> items1 = set.getItems();
+        for(String string:items) {
+            boolean exist = false;
+            for(String string1:items1) {
+                if(string.equals(string1)) {
+                    exist = true;
+                    break;
+                }
+            }
+            if(!exist) {
+                result.addItem(string);
+            }
+        }
+        return result;
+    }
 
     public ItemSet link(ItemSet set) {
         HashSet<String> hashSet = new HashSet<>();

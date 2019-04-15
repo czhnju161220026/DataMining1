@@ -25,7 +25,7 @@ public class UsageLoader {
                 while(scanner.hasNextLine()) {
                     //System.out.println(scanner.nextLine());
                     String Line = scanner.nextLine();
-                    if(Line.equals("")) {
+                    if(Line.equals("") || Line.equals("|")) {
                         ;
                     }
                     else if(Line.equals("**SOF**")) {
@@ -38,7 +38,7 @@ public class UsageLoader {
                             tokens = new ArrayList<>();
                         }
                     }
-                    else if(Line.charAt(0) !='<') {
+                    else if(Line.charAt(0) !='<' && Line.charAt(0) != '-') {
                         if(operator.equals("")) {
                             operator = operator + Line;
                         }
