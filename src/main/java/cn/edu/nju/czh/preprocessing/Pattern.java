@@ -1,6 +1,6 @@
 package cn.edu.nju.czh.preprocessing;
 
-public class Mode {
+public class Pattern {
     private ItemSet itemSet;
     private int num = 0;
 

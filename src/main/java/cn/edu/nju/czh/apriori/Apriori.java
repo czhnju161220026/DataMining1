@@ -1,7 +1,7 @@
 package cn.edu.nju.czh.apriori;
 
 import cn.edu.nju.czh.preprocessing.ItemSet;
-import cn.edu.nju.czh.preprocessing.Mode;
+import cn.edu.nju.czh.preprocessing.Pattern;
 import cn.edu.nju.czh.preprocessing.Transaction;
 
 import java.io.BufferedWriter;
@@ -9,21 +9,29 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Apriori {
     private ArrayList<Transaction> transactions;
+    private String logPath;
     //频繁模式
-    private ArrayList<Mode> frequentModes = new ArrayList<>();
-    ArrayList<Mode> nextFrequentModes = new ArrayList<>();
+    private ArrayList<Pattern> frequentPatterns = new ArrayList<>();
+    ArrayList<Pattern> nextFrequentPatterns = new ArrayList<>();
     private int minSup = 2;
 
     public void setTransactions(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
+        frequentPatterns = new ArrayList<>();
+        nextFrequentPatterns = new ArrayList<>();
     }
 
     public void setMinSup(int minSup) {
         this.minSup = minSup;
+    }
+
+    public void setLogPath(String logPath) {
+        this.logPath = logPath;
     }
 
     private boolean testItemSet(ItemSet set) {
@@ -39,8 +47,8 @@ public class Apriori {
             }
 
             boolean exist =false;
-            for(Mode mode:frequentModes) {
-                ItemSet set1 = mode.getItemSet();
+            for(Pattern pattern : frequentPatterns) {
+                ItemSet set1 = pattern.getItemSet();
                 if(set1.contains(subSet)) {
                     exist = true;
                     break;
@@ -53,8 +61,8 @@ public class Apriori {
         }
         //TODO：去重处理
         boolean exist = false;
-        for(Mode mode:nextFrequentModes) {
-            ItemSet set1 = mode.getItemSet();
+        for(Pattern pattern : nextFrequentPatterns) {
+            ItemSet set1 = pattern.getItemSet();
             if(set1.contains(set)) {
                 exist = true;
                 break;
@@ -76,10 +84,10 @@ public class Apriori {
     private void linkAndCut() {
         ArrayList<ItemSet> sets = new ArrayList<>(); //暂存连接后的集合
         //TODO:连接步
-        for(int i = 0;i < frequentModes.size();i++) {
-            for(int j = i+1;j<frequentModes.size();j++) {
-                ItemSet set1 = frequentModes.get(i).getItemSet();
-                ItemSet set2 = frequentModes.get(j).getItemSet();
+        for(int i = 0; i < frequentPatterns.size(); i++) {
+            for(int j = i+1; j< frequentPatterns.size(); j++) {
+                ItemSet set1 = frequentPatterns.get(i).getItemSet();
+                ItemSet set2 = frequentPatterns.get(j).getItemSet();
                 if(set1.linkable(set2)) {
                     sets.add(set1.link(set2));
                 }
@@ -92,11 +100,11 @@ public class Apriori {
             if(this.testItemSet(set)) {
                 int num = this.countItemSet(set);
                 if(num >= minSup) {
-                    //System.out.println("Find new Mode:"+set+","+num);
-                    Mode mode = new Mode();
-                    mode.setItemSet(set);
-                    mode.setNum(num);
-                    nextFrequentModes.add(mode);
+                    //System.out.println("Find new Pattern:"+set+","+num);
+                    Pattern pattern = new Pattern();
+                    pattern.setItemSet(set);
+                    pattern.setNum(num);
+                    nextFrequentPatterns.add(pattern);
                 }
             }
         }
@@ -105,8 +113,8 @@ public class Apriori {
     private void outputFrequentModes(String path) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path)));
-            for(Mode mode:frequentModes) {
-                writer.write(""+mode);
+            for(Pattern pattern : frequentPatterns) {
+                writer.write(""+ pattern);
                 writer.newLine();
             }
             writer.flush();
@@ -118,8 +126,7 @@ public class Apriori {
         }
     }
 
-    //进行挖掘
-    public void excute() {
+    private void init() {
         //先将事务变成若干1频繁项集
         HashMap<String,Integer> hashMap = new HashMap<>();
         for(Transaction transaction:transactions) {
@@ -136,36 +143,44 @@ public class Apriori {
         for(String str:hashMap.keySet()) {
             ItemSet itemSet = new ItemSet();
             itemSet.addItem(str);
-            Mode mode = new Mode();
-            mode.setItemSet(itemSet);
+            Pattern pattern = new Pattern();
+            pattern.setItemSet(itemSet);
             int num = hashMap.get(str);
             if(num > minSup) {
-                mode.setNum(num);
-                frequentModes.add(mode);
+                pattern.setNum(num);
+                frequentPatterns.add(pattern);
             }
         }
+    }
+
+    //进行挖掘
+    public void excute() {
+        System.out.println("Apriori start:" + new Date());
+        long start = System.currentTimeMillis();
+        init();
         int count = 1;
-        outputFrequentModes("output/Groceries/frequent"+count+".txt");
+        outputFrequentModes(logPath+"/frequent"+count+".txt");
 
         while (true) {
             linkAndCut();
             count ++;
             //没有生成更多项的频繁集了
-            if(nextFrequentModes.size()==0) {
+            if(nextFrequentPatterns.size()==0) {
                 break;
             }
             else {
-                //System.out.println(nextFrequentModes);
-                System.out.println("Find "+count+"frequent modes");
-                frequentModes = nextFrequentModes;
-                nextFrequentModes = new ArrayList<>();
-                outputFrequentModes("output/Groceries/frequent"+count+".txt");
+                //System.out.println(nextFrequentPatterns);
+                //System.out.println("Find "+count+"frequent modes");
+                frequentPatterns = nextFrequentPatterns;
+                nextFrequentPatterns = new ArrayList<>();
+                outputFrequentModes(logPath+"/frequent"+count+".txt");
             }
         }
+        long end = System.currentTimeMillis();
+        System.out.println("Apriori end: "+new Date());
+        System.out.println("Time cost: "+(end - start)+" ms.");
+        System.out.println("Result at "+logPath);
     }
 
-    public static void main(String[] args) {
-
-    }
 
 }
