@@ -18,7 +18,7 @@ public class Main {
         ArrayList<Transaction> transactions2 = usageLoader.getTransactions();
         Apriori apriori = new Apriori();
         apriori.setTransactions(transactions1);
-        apriori.setMinSup(5);
+        apriori.setMinSup(30);
         apriori.excute();
     }
 }

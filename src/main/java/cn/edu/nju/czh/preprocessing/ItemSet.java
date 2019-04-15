@@ -3,7 +3,7 @@ package cn.edu.nju.czh.preprocessing;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-// TODO: 完成ItemSet类
+// ItemSet类
 public class ItemSet {
     private ArrayList<String> items = new ArrayList<>();
 
