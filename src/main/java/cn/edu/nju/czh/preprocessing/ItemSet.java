@@ -2,6 +2,7 @@ package cn.edu.nju.czh.preprocessing;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 // ItemSet类
 public class ItemSet {
@@ -102,11 +103,9 @@ public class ItemSet {
         return items.toString();
     }
 
-    public static void main(String[] args) {
-        HashSet<String> h = new HashSet<>();
-        h.add("123");
-        h.add("234");
-        h.add("123");
-        System.out.println(h);
+    public ItemSet() {}
+
+    public ItemSet(List<String> items) {
+        this.items.addAll(items);
     }
 }

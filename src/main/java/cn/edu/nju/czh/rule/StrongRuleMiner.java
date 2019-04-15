@@ -85,5 +85,6 @@ public class StrongRuleMiner {
             e.printStackTrace();
         }
         System.out.println("Strong rules at "+logPath+"/rules.txt");
+        System.out.println("---------------------------------------------------");
     }
 }

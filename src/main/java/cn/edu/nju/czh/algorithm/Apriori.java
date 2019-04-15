@@ -1,4 +1,4 @@
-package cn.edu.nju.czh.apriori;
+package cn.edu.nju.czh.algorithm;
 
 import cn.edu.nju.czh.preprocessing.ItemSet;
 import cn.edu.nju.czh.preprocessing.Pattern;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Apriori {
+public class Apriori implements Method{
     private ArrayList<Transaction> transactions;
     private String logPath;
     //频繁模式
@@ -138,6 +138,9 @@ public class Apriori {
     }
 
     private void init() {
+        frequentPatterns.clear();
+        nextFrequentPatterns.clear();
+        allFrequentPatterns.clear();
         //先将事务变成若干1频繁项集
         HashMap<String,Integer> hashMap = new HashMap<>();
         for(Transaction transaction:transactions) {
@@ -166,9 +169,6 @@ public class Apriori {
 
     //进行挖掘
     public void excute() {
-        frequentPatterns.clear();
-        nextFrequentPatterns.clear();
-        allFrequentPatterns.clear();
         System.out.println("Apriori start:" + new Date());
         long start = System.currentTimeMillis();
         init();
