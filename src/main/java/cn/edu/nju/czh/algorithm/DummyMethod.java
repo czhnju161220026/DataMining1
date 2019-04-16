@@ -40,17 +40,6 @@ public class DummyMethod implements Method{
         return allFrequentPatterns;
     }
 
-    private boolean testItemSet(ItemSet set) {
-        //不利用子集关系，直接计数测试
-        int count = 0;
-        for(Transaction transaction : transactions) {
-            if(transaction.containsItemSet(set)) {
-                count ++;
-            }
-        }
-
-        return count >= minSup;
-    }
 
     private int countItemSet(ItemSet set) {
         int count = 0;
@@ -75,18 +64,35 @@ public class DummyMethod implements Method{
             }
         }
         //TODO:剪枝步
-        //理论上此时sets中全是 k 项集
-        //对它们的每个k-1子项集进行测试，它们应该都是已知频繁的
+        //不进行子集测试，直接计数
+        //先去重
+        ArrayList<ItemSet> tempSet = new ArrayList<>();
         for(ItemSet set:sets) {
-            if(this.testItemSet(set)) {
-                int num = this.countItemSet(set);
-                if(num >= minSup) {
-                    //System.out.println("Find new Pattern:"+set+","+num);
-                    Pattern pattern = new Pattern();
-                    pattern.setItemSet(set);
-                    pattern.setNum(num);
-                    nextFrequentPatterns.add(pattern);
+            if(tempSet.isEmpty()) {
+                tempSet.add(set);
+            }
+            else {
+                boolean exist = false;
+                for(ItemSet set1:tempSet) {
+                    if(set1.contains(set)) {
+                        exist = true;
+                        break;
+                    }
                 }
+                if(!exist) {
+                    tempSet.add(set);
+                }
+            }
+        }
+        sets = tempSet;
+        for(ItemSet set:sets) {
+            int num = this.countItemSet(set);
+            if(num >= minSup) {
+                //System.out.println("Find new Pattern:"+set+","+num);
+                Pattern pattern = new Pattern();
+                pattern.setItemSet(set);
+                pattern.setNum(num);
+                nextFrequentPatterns.add(pattern);
             }
         }
     }
