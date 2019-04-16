@@ -12,6 +12,12 @@ public class StrongRuleMiner {
     private double minConfidence;
     private ArrayList<Rule> rules = new ArrayList<>();
 
+    public void setTotalSize(int totalSize) {
+        this.totalSize = totalSize;
+    }
+
+    private int totalSize;
+
     public void setFrequentPatterns(ArrayList<ArrayList<Pattern>> frequentPatterns) {
         this.frequentPatterns = frequentPatterns;
     }
@@ -65,7 +71,7 @@ public class StrongRuleMiner {
                     //超过阈值，添加规则
                     double confidence = support / subSupport;
                     if(confidence >= minConfidence) {
-                        rules.add(new Rule(subset, itemSet.getComplement(subset),confidence,pattern.getNum()));
+                        rules.add(new Rule(subset, itemSet.getComplement(subset),confidence,pattern.getNum(),totalSize));
                     }
                 }
 

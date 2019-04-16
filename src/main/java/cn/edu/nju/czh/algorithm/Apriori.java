@@ -19,14 +19,17 @@ public class Apriori implements Method{
     private ArrayList<Pattern> frequentPatterns = new ArrayList<>();
     private ArrayList<Pattern> nextFrequentPatterns = new ArrayList<>();
     private ArrayList<ArrayList<Pattern>> allFrequentPatterns = new ArrayList<>();
-    private int minSup = 2;
+
+    private int minSup;
+    private double relativeMinSup;
 
     public void setTransactions(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
     }
 
-    public void setMinSup(int minSup) {
-        this.minSup = minSup;
+    public void setMinSup(double minSup) {
+        this.relativeMinSup = minSup;
+        this.minSup = (int)(relativeMinSup * transactions.size());
     }
 
     public void setLogPath(String logPath) {
@@ -102,7 +105,7 @@ public class Apriori implements Method{
         for(ItemSet set:sets) {
             if(this.testItemSet(set)) {
                 int num = this.countItemSet(set);
-                if(num >= minSup) {
+                if(num > minSup) {
                     //System.out.println("Find new Pattern:"+set+","+num);
                     Pattern pattern = new Pattern();
                     pattern.setItemSet(set);
@@ -197,6 +200,4 @@ public class Apriori implements Method{
         System.out.println("Time cost: "+(end - start)+" ms.");
         System.out.println("Frequent Patterns at "+logPath+"/frequent_patterns.txt");
     }
-
-
 }

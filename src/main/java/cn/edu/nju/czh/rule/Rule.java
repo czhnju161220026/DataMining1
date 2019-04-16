@@ -8,6 +8,9 @@ public class Rule {
     private double confidence;
     private int support;
 
+
+    private int totalSize;
+
     public ItemSet getSet1() {
         return set1;
     }
@@ -32,15 +35,17 @@ public class Rule {
         this.confidence = confidence;
     }
 
-    public Rule(ItemSet set1, ItemSet set2, double confidence,int support) {
+    public Rule(ItemSet set1, ItemSet set2, double confidence,int support, int totalSize) {
         this.set1 = set1;
         this.set2 = set2;
         this.confidence = confidence;
         this.support = support;
+        this.totalSize = totalSize;
     }
 
     @Override
     public String toString() {
-        return set1.toString() + " => "+set2.toString() + " 置信度:"+String.format("%.2f",confidence*100)+"%,支持度:"+support;
+        return set1.toString() + " => "+set2.toString() + " 置信度:"+String.format("%.2f",confidence*100)+"%,支持数:"+support+
+                ", 相对支持度:"+String.format("%.2f",100*(double)support / (double)totalSize ) + "%";
     }
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface Method {
     void setTransactions(ArrayList<Transaction> transactions);
     void setLogPath(String logPath);
-    void setMinSup(int minSupport);
+    void setMinSup(double minSupport);
     ArrayList<ArrayList<Pattern>> getAllFrequentPatterns();
     void excute();
 }
