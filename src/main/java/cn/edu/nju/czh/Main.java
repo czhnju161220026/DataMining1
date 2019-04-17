@@ -30,11 +30,11 @@ public class Main {
         groceriesLoader.loadGroceries("dataset/GroceryStore/Groceries.csv");
         usageLoader.loadUsages("dataset/UNIX_usage");
 
-        test(new Apriori(), groceriesLoader.getTransactions(), 0.003,0.6,"output/Apriori/Groceries");
-        test(new Apriori(), usageLoader.getTransactions(), 0.01,0.7,"output/Apriori/Usage");
-        test(new FPGrowth(),groceriesLoader.getTransactions(),0.003,0.6,"output/FP-growth/Groceries");
-        test(new FPGrowth(),usageLoader.getTransactions(),0.01,0.7,"output/FP-growth/Usage");
-        test(new DummyMethod(),groceriesLoader.getTransactions(), 0.003, 0.6, "output/DummyMethod/Groceries");
-        test(new DummyMethod(),usageLoader.getTransactions(),0.01,0.7,"output/DummyMethod/Usage");
+        test(new Apriori(), groceriesLoader.getTransactions(), 0.003,0.7,"output/Apriori/Groceries");
+        test(new Apriori(), usageLoader.getTransactions(), 0.03,0.7,"output/Apriori/Usage");
+        test(new FPGrowth(),groceriesLoader.getTransactions(),0.003,0.7,"output/FP-growth/Groceries");
+        test(new FPGrowth(),usageLoader.getTransactions(),0.03,0.7,"output/FP-growth/Usage");
+        test(new DummyMethod(),groceriesLoader.getTransactions(), 0.003, 0.7, "output/DummyMethod/Groceries");
+        test(new DummyMethod(),usageLoader.getTransactions(),0.03,0.7,"output/DummyMethod/Usage");
     }
 }

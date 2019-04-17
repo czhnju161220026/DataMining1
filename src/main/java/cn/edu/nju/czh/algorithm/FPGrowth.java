@@ -115,6 +115,7 @@ public class FPGrowth implements Method{
                 patterns.add(pattern);
             }
             scanner.close();
+            System.out.println(patterns.size());
             File file1 = new File(logPath+"/temp2.txt");
             file1.delete();
             patterns.sort(new Comparator<Pattern>() {
@@ -146,6 +147,7 @@ public class FPGrowth implements Method{
                     frequentPatterns.add(pattern);
                 }
             }
+            allFrequentPatterns.add(frequentPatterns);
 
             for(int i = 0;i < allFrequentPatterns.size(); i++) {
                 outputFrequentPatterns(logPath+"/frequent_patterns.txt",i+1,allFrequentPatterns.get(i));
@@ -155,5 +157,6 @@ public class FPGrowth implements Method{
         catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }
