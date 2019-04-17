@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -29,7 +30,7 @@ public class DummyMethod implements Method{
 
     public void setMinSup(double minSup) {
         this.relativeMinSup = minSup;
-        this.minSup = (int)(relativeMinSup * transactions.size());
+        this.minSup = (int)(relativeMinSup * transactions.size()+0.5);
     }
 
     public void setLogPath(String logPath) {
@@ -98,6 +99,22 @@ public class DummyMethod implements Method{
     }
 
     private void outputFrequentModes(String path, int count) {
+        frequentPatterns.sort(new Comparator<Pattern>() {
+            @Override
+            public int compare(Pattern o1, Pattern o2) {
+                int num1 = o1.getNum();
+                int num2 = o2.getNum();
+                if(num1 < num2) {
+                    return  -1;
+                }
+                else if(num1 == num2) {
+                    return  0;
+                }
+                else {
+                    return  1;
+                }
+            }
+        });
         try {
             BufferedWriter writer;
             if(count == 1) {
@@ -144,7 +161,7 @@ public class DummyMethod implements Method{
             Pattern pattern = new Pattern();
             pattern.setItemSet(itemSet);
             int num = hashMap.get(str);
-            if(num > minSup) {
+            if(num >= minSup) {
                 pattern.setNum(num);
                 frequentPatterns.add(pattern);
             }

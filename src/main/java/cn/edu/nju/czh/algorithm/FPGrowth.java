@@ -38,6 +38,22 @@ public class FPGrowth implements Method{
     }
 
     private void outputFrequentPatterns(String path, int count, ArrayList<Pattern> frequentPatterns) {
+        frequentPatterns.sort(new Comparator<Pattern>() {
+            @Override
+            public int compare(Pattern o1, Pattern o2) {
+                int num1 = o1.getNum();
+                int num2 = o2.getNum();
+                if(num1 < num2) {
+                    return  -1;
+                }
+                else if(num1 == num2) {
+                    return  0;
+                }
+                else {
+                    return  1;
+                }
+            }
+        });
         try {
             BufferedWriter writer;
             if(count == 1) {
@@ -127,6 +143,7 @@ public class FPGrowth implements Method{
                     count = pattern.getItemSet().getSize();
                     allFrequentPatterns.add(frequentPatterns);
                     frequentPatterns = new ArrayList<>();
+                    frequentPatterns.add(pattern);
                 }
             }
 
